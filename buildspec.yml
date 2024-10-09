@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 533267021347.dkr.ecr.ap-south-1.amazonaws.com
+  build:
+    commands:
+      - echo Building the Docker image...
+      - docker build -t nikhil .
+      - echo Tagging the Docker image...
+      - docker tag nikhil:latest 533267021347.dkr.ecr.ap-south-1.amazonaws.com/nikhil:latest
+  post_build:
+    commands:
+      - echo Pushing the Docker image...
+      - docker push 533267021347.dkr.ecr.ap-south-1.amazonaws.com/nikhil:latest
+      - echo Deploying the application...
+      - ssh -o StrictHostKeyChecking=no ubuntu@65.1.108.29 "
+          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 533267021347.dkr.ecr.ap-south-1.amazonaws.com &&
+          docker-compose down &&
+          docker-compose up -d
+        "
