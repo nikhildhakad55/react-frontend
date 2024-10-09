@@ -1,4 +1,4 @@
- Use the official Node.js 14 image as the base image
+# Use the official Node.js 14 image as the base image
 FROM node:14
 
 # Set the working directory in the container
@@ -15,5 +15,5 @@ COPY . .
 # Set the environment variable for production
 ENV NODE_ENV=production
 
-# Expose port 3000
+# Expose port 3010
 EXPOSE 3010
